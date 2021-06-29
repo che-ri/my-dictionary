@@ -7,6 +7,7 @@ import { TiPlusOutline } from "react-icons/ti";
 
 const Home = props => {
     const dict_list = useSelector(state => state.dict.list);
+
     return (
         <Layout title="사전">
             {dict_list.map((list, idx) => {

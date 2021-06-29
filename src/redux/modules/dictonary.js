@@ -6,7 +6,7 @@ const bucket_db = firestore.collection("my-dictonary");
 
 // Actions
 const LOAD = "dict/LOAD";
-// const CREATE = "bucket/CREATE";
+const CREATE = "dict/CREATE";
 // const DELETE = "bucket/DELETE";
 // const COMPLETE = "bucket/COMPLETE";
 
@@ -15,9 +15,9 @@ export const loadDict = dict => {
     return { type: LOAD, dict };
 };
 
-// export const createBucket = bucket => {
-//     return { type: CREATE, bucket };
-// };
+export const createDict = dict => {
+    return { type: CREATE, dict };
+};
 
 // export const deleteBucket = index => {
 //     return { type: DELETE, index };
@@ -54,15 +54,15 @@ export default function reducer(state = initialState, action = {}) {
     switch (action.type) {
         // do reducer stuff
         case "dict/LOAD":
-            // //action.dict이 없다면 그냥 state를 반환한다.
-            // if (action.dict.length > 0) {
-            //     return { list: action.dict, is_loaded: true };
-            // }
+            //action.dict이 없다면 그냥 state를 반환한다.
+            if (action.dict.length > 0) {
+                return { list: action.dict, is_loaded: true };
+            }
             return state;
 
-        // case "bucket/CREATE":
-        //     const new_bucket_list = [...state.list, action.bucket];
-        //     return { list: new_bucket_list };
+        case "dict/CREATE":
+            const new_dict_list = [...state.list, action.dict];
+            return { list: new_dict_list };
 
         // case "bucket/DELETE":
         //     const bucket_list = state.list.filter((l, idx) => {
