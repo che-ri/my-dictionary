@@ -1,21 +1,36 @@
-import React, { createRef, useRef } from "react";
-import { Link } from "react-router-dom";
+import React, { useRef } from "react";
 import styled from "styled-components";
-import { IoMdArrowRoundBack } from "react-icons/io";
-import { useDispatch, useSelector } from "react-redux";
 
+//리덕스
+import { connect } from "react-redux";
+import { addDictFB } from "../redux/modules/dictionary";
+
+//페이지
 import Layout from "../components/Layout";
 
-const Add = () => {
+//리덕스 액션생성함수 props로 받아오기
+const mapDispatchToProps = dispatch => ({
+    create: new_item => {
+        dispatch(addDictFB(new_item));
+    },
+});
+
+const Add = props => {
     const word = useRef(null);
     const desc = useRef(null);
     const exam = useRef(null);
 
-    const handleOnClick = () => {
+    const addNewItem = () => {
         const new_word = word.current.value;
         const new_desc = desc.current.value;
         const new_exam = exam.current.value;
         const new_item = { word: new_word, desc: new_desc, exam: new_exam };
+        props.create(new_item);
+
+        //내용 지워주기
+        word.current.value = "";
+        desc.current.value = "";
+        exam.current.value = "";
     };
 
     return (
@@ -33,12 +48,7 @@ const Add = () => {
                 <input type="text" ref={exam} />
             </Card>
             <div>
-                <BackBtn>
-                    <Link to="/">
-                        <IoMdArrowRoundBack />
-                    </Link>
-                </BackBtn>
-                <AddBtn onClick={handleOnClick}>추가하기</AddBtn>
+                <AddBtn onClick={addNewItem}>추가하기</AddBtn>
             </div>
         </Layout>
     );
@@ -49,8 +59,8 @@ const Card = styled.div`
     flex-direction: column;
     background: white;
     border-radius: 10px;
-    margin: 20px 0;
     padding: 10px;
+    margin-bottom: 20px;
     & input {
         padding: 5px;
         all: unset;
@@ -78,17 +88,5 @@ const AddBtn = styled.button`
         transform: scale(0.99);
     }
 `;
-const BackBtn = styled.div`
-    position: absolute;
-    top: 20px;
-    right: 20px;
-    font-size: 1.5rem;
-    a > svg > path {
-        transition: color 0.3s ease;
-    }
-    a:hover > svg > path {
-        color: white;
-    }
-`;
 
-export default Add;
+export default connect(null, mapDispatchToProps)(Add);

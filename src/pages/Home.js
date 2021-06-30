@@ -1,12 +1,35 @@
-import React from "react";
+import React, { useEffect } from "react";
 import styled from "styled-components";
+
+//리덕스
+import { useSelector, useDispatch } from "react-redux";
+import { connect } from "react-redux";
+import { loadDictFB, deleteDictFB } from "../redux/modules/dictionary";
+
+//아이콘
+import { AiOutlineDelete } from "react-icons/ai";
+
+//컴포넌트
 import Layout from "../components/Layout";
-import { Link } from "react-router-dom";
-import { useSelector } from "react-redux";
-import { TiPlusOutline } from "react-icons/ti";
+
+const mapStateToProps = state => ({
+    list: state.dict.list,
+    is_loaded: state.dict.is_loaded,
+});
+
+const mapDispatchToProps = dispatch => ({
+    load: () => {
+        dispatch(loadDictFB());
+    },
+    delete: idx => {
+        dispatch(deleteDictFB(idx));
+    },
+});
 
 const Home = props => {
-    const dict_list = useSelector(state => state.dict.list);
+    const dict_list = props.list;
+
+    useEffect(() => props.load(), []);
 
     return (
         <Layout title="사전">
@@ -25,24 +48,25 @@ const Home = props => {
                             <Title>예시</Title>
                             <Content color="blue">{list.exam}</Content>
                         </Example>
+                        <Controls>
+                            <button onClick={() => props.delete(idx)}>
+                                <AiOutlineDelete />
+                            </button>
+                        </Controls>
                     </Card>
                 );
             })}
-            <Control>
-                <Link to="/add">
-                    <TiPlusOutline />
-                </Link>
-            </Control>
         </Layout>
     );
 };
 
 const Card = styled.div`
+    position: relative;
     width: 100%;
     background: white;
-    margin: 20px 0;
+    margin-bottom: 20px;
     padding: 20px;
-    border-radius: 20px;
+    border-radius: 10px;
     & div {
         margin-bottom: 10px;
     }
@@ -58,16 +82,28 @@ const Content = styled.p`
     color: ${props => (props.color === "blue" ? "#189AB4" : "inherit")};
 `;
 
-const Control = styled.div`
+const Controls = styled.div`
     position: absolute;
     top: 20px;
     right: 20px;
-    font-size: 1.5rem;
-    a > svg > path {
-        transition: color 0.3s ease;
-    }
-    a:hover > svg > path {
-        color: white;
+    display: flex;
+    width: 30px;
+    height: 30px;
+    & button {
+        background: inherit;
+        width: 100%;
+        font-size: 1rem;
+        border-radius: 50%;
+        & * {
+            color: #189ab4;
+        }
+        &:hover {
+            background: #189ab4;
+            & * {
+                color: #fff;
+            }
+        }
     }
 `;
-export default Home;
+
+export default connect(mapStateToProps, mapDispatchToProps)(Home);

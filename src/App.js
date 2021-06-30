@@ -1,7 +1,6 @@
 import React from "react";
 import { GlobalStyle } from "./globalStyle";
-import { withRouter } from "react-router";
-import { BrowserRouter as Switch, Route, Redirect } from "react-router-dom";
+import { Switch, Route, Redirect } from "react-router-dom";
 
 import Home from "./pages/Home";
 import Add from "./pages/Add";
@@ -19,4 +18,4 @@ function App() {
     );
 }
 
-export default withRouter(App);
+export default App;
